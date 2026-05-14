@@ -18,6 +18,10 @@ const authRouter = require('./routes/auth');
 app.use('/api/posts', postsRouter);
 app.use('/api/auth', authRouter);
 
+app.get("/", (req, res) => {
+  res.send("Server Running");
+});
+
 
 // Serve static assets if in production
 console.log('Current Environment:', process.env.NODE_ENV);
