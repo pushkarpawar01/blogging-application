@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'production' || process.env.SERVE_STATIC) {
   app.use(express.static(distPath));
 
   // The catch-all route should be the LAST route defined
-  app.get('*', (req, res) => {
+  app.get(/.*/, (req, res) => {
     res.sendFile(path.resolve(distPath, 'index.html'), (err) => {
       if (err) {
         console.error('Error sending index.html:', err);
