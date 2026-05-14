@@ -20,12 +20,22 @@ app.use('/api/auth', authRouter);
 
 
 // Serve static assets if in production
+console.log('Current Environment:', process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'production' || process.env.SERVE_STATIC) {
-  // Set static folder
-  app.use(express.static(path.join(__dirname, '../client/dist')));
+  const distPath = path.join(__dirname, '../client/dist');
+  console.log('Serving static files from:', distPath);
 
-  app.get(/.*/, (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+  // Set static folder
+  app.use(express.static(distPath));
+
+  // The catch-all route should be the LAST route defined
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(distPath, 'index.html'), (err) => {
+      if (err) {
+        console.error('Error sending index.html:', err);
+        res.status(404).send('Frontend build not found. Make sure you ran "npm run build" in the root directory.');
+      }
+    });
   });
 }
 
